@@ -1,4 +1,6 @@
-export const getTasks = async () => {
+import { Task } from '../types/task';
+
+export const getTasks = async (): Promise<Task[]> => {
   const response = await fetch(
     'https://6aa854879b08676cd32bfe49.mockapi.io/api/tasks',
   );
