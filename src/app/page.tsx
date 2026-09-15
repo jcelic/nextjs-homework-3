@@ -2,45 +2,28 @@
 
 import { useState } from 'react';
 import { MoonIcon, SunIcon } from '@phosphor-icons/react';
+
 import { useTasks } from './hooks/useTasks';
 import { useAddTask } from './hooks/useAddTask';
-import { useEditTask } from './hooks/useEditTask';
 import { useTheme } from './store/useTheme';
 import TaskItem from './components/TaskItem';
 
 export default function Home() {
   const [inputValue, setInputValue] = useState('');
-  const [editInputValue, setEditInputValue] = useState('');
-  const [activeId, setActiveId] = useState<string | null>(null);
 
   const { data } = useTasks();
   const { mutate: addTask } = useAddTask();
-  const { mutate: editTask } = useEditTask();
 
   const theme = useTheme((state) => state.theme);
   const toggleTheme = useTheme((state) => state.toggleTheme);
 
   const handleAdd = () => {
-    addTask({ title: inputValue, completed: false });
+    addTask({
+      title: inputValue,
+      completed: false,
+    });
+
     setInputValue('');
-  };
-
-  const handleEdit = ({
-    id,
-    title,
-    completed,
-  }: {
-    id: string;
-    title: string;
-    completed: boolean;
-  }) => {
-    editTask({ id, title, completed });
-    setActiveId(null);
-  };
-
-  const handleEditClick = (id: string, title: string) => {
-    setActiveId(id);
-    setEditInputValue(title);
   };
 
   return (
@@ -78,16 +61,7 @@ export default function Home() {
 
         <div className="space-y-3">
           {data?.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              activeId={activeId}
-              editInputValue={editInputValue}
-              setEditInputValue={setEditInputValue}
-              setActiveId={setActiveId}
-              handleEdit={handleEdit}
-              handleEditClick={handleEditClick}
-            />
+            <TaskItem key={task.id} task={task} />
           ))}
         </div>
       </div>

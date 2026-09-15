@@ -1,29 +1,40 @@
+'use client';
+
+import { useState } from 'react';
 import {
   CheckCircleIcon,
   PencilSimpleIcon,
   XIcon,
 } from '@phosphor-icons/react';
+
 import { Task } from '../types/task';
+import { useEditTask } from '../hooks/useEditTask';
 
 type TaskItemProps = {
   task: Task;
-  activeId: string | null;
-  editInputValue: string;
-  setEditInputValue: React.Dispatch<React.SetStateAction<string>>;
-  setActiveId: React.Dispatch<React.SetStateAction<string | null>>;
-  handleEdit: (data: { id: string; title: string; completed: boolean }) => void;
-  handleEditClick: (id: string, title: string) => void;
 };
 
-const TaskItem = ({
-  task,
-  activeId,
-  editInputValue,
-  setEditInputValue,
-  setActiveId,
-  handleEdit,
-  handleEditClick,
-}: TaskItemProps) => {
+const TaskItem = ({ task }: TaskItemProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editInputValue, setEditInputValue] = useState(task.title);
+
+  const { mutate: editTask } = useEditTask();
+
+  const handleEditClick = () => {
+    setEditInputValue(task.title);
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    editTask({
+      id: task.id,
+      title: editInputValue,
+      completed: task.completed,
+    });
+
+    setIsEditing(false);
+  };
+
   return (
     <div
       className={`flex items-center gap-3 rounded-lg border p-4 transition ${
@@ -32,7 +43,7 @@ const TaskItem = ({
           : 'border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900'
       }`}
     >
-      {activeId === task.id ? (
+      {isEditing ? (
         <input
           type="text"
           className="flex-1 rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
@@ -50,11 +61,11 @@ const TaskItem = ({
         </span>
       )}
 
-      {activeId === task.id ? (
+      {isEditing ? (
         <div className="flex items-center gap-1">
           <button
             className="rounded-md p-1.5 transition hover:bg-zinc-200 dark:hover:bg-zinc-800"
-            onClick={() => setActiveId(null)}
+            onClick={() => setIsEditing(false)}
           >
             <XIcon
               size={20}
@@ -64,13 +75,7 @@ const TaskItem = ({
 
           <button
             className="rounded-md p-1.5 transition hover:bg-zinc-200 dark:hover:bg-zinc-800"
-            onClick={() =>
-              handleEdit({
-                id: task.id,
-                title: editInputValue,
-                completed: task.completed,
-              })
-            }
+            onClick={handleSave}
           >
             <CheckCircleIcon
               size={20}
@@ -82,7 +87,7 @@ const TaskItem = ({
         <>
           <button
             className="rounded-md p-2 text-zinc-500 transition hover:bg-zinc-200 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
-            onClick={() => handleEditClick(task.id, task.title)}
+            onClick={handleEditClick}
           >
             <PencilSimpleIcon size={18} />
           </button>
@@ -90,9 +95,9 @@ const TaskItem = ({
           <input
             type="checkbox"
             className="size-4 cursor-pointer"
-            checked={task.completed ?? false}
+            checked={task.completed}
             onChange={() =>
-              handleEdit({
+              editTask({
                 id: task.id,
                 title: task.title,
                 completed: !task.completed,
