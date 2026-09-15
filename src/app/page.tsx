@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { MoonIcon, SunIcon } from '@phosphor-icons/react';
 import { useTasks } from './hooks/useTasks';
 import { useAddTask } from './hooks/useAddTask';
 import { useEditTask } from './hooks/useEditTask';
+import { useTheme } from './store/useTheme';
 import TaskItem from './components/TaskItem';
 
 export default function Home() {
@@ -14,6 +16,9 @@ export default function Home() {
   const { data } = useTasks();
   const { mutate: addTask } = useAddTask();
   const { mutate: editTask } = useEditTask();
+
+  const theme = useTheme((state) => state.theme);
+  const toggleTheme = useTheme((state) => state.toggleTheme);
 
   const handleAdd = () => {
     addTask({ title: inputValue, completed: false });
@@ -39,21 +44,32 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-4 py-12 text-white">
+    <main
+      className={`${theme === 'dark' ? 'dark' : ''} min-h-screen bg-white px-4 py-12 text-zinc-900 dark:bg-zinc-950 dark:text-white`}
+    >
       <div className="mx-auto max-w-xl">
-        <h1 className="mb-8 text-3xl font-bold">Tasks</h1>
+        <div className="mb-8 flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Tasks</h1>
+
+          <button
+            onClick={toggleTheme}
+            className="rounded-lg border border-zinc-300 p-2 transition hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+          >
+            {theme === 'dark' ? <SunIcon size={20} /> : <MoonIcon size={20} />}
+          </button>
+        </div>
 
         <div className="mb-8 flex gap-3">
           <input
             type="text"
             placeholder="Add a new task..."
-            className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 outline-none placeholder:text-zinc-500 focus:border-zinc-500"
+            className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-3 outline-none placeholder:text-zinc-400 focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:placeholder:text-zinc-500"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
 
           <button
-            className="rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200"
+            className="rounded-lg bg-zinc-900 px-5 py-3 font-medium text-white transition hover:bg-zinc-700 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
             onClick={handleAdd}
           >
             Add
