@@ -44,7 +44,7 @@ export const editTask = async ({
   title,
   completed,
 }: {
-  id: number;
+  id: string;
   title: string;
   completed: boolean;
 }): Promise<Task> => {

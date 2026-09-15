@@ -13,7 +13,7 @@ import { useEditTask } from './hooks/useEditTask';
 export default function Home() {
   const [inputValue, setInputValue] = useState('');
   const [editInputValue, setEditInputValue] = useState('');
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const { data } = useTasks();
   const { mutate: addTask } = useAddTask();
@@ -24,7 +24,7 @@ export default function Home() {
     title,
     completed,
   }: {
-    id: number;
+    id: string;
     title: string;
     completed: boolean;
   }) => {
@@ -32,7 +32,7 @@ export default function Home() {
     setActiveId(null);
   };
 
-  const handleEditClick = (id: number, title: string) => {
+  const handleEditClick = (id: string, title: string) => {
     setActiveId(id);
     setEditInputValue(title);
   };
