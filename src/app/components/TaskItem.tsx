@@ -25,7 +25,13 @@ const TaskItem = ({
   handleEditClick,
 }: TaskItemProps) => {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900">
+    <div
+      className={`flex items-center gap-3 rounded-lg border p-4 transition ${
+        task.completed
+          ? 'border-zinc-200 bg-zinc-100 opacity-60 dark:border-zinc-800 dark:bg-zinc-900'
+          : 'border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900'
+      }`}
+    >
       {activeId === task.id ? (
         <input
           type="text"
@@ -35,7 +41,13 @@ const TaskItem = ({
           autoFocus
         />
       ) : (
-        <span className="flex-1">{task.title}</span>
+        <span
+          className={`flex-1 ${
+            task.completed ? 'text-zinc-500 line-through' : ''
+          }`}
+        >
+          {task.title}
+        </span>
       )}
 
       {activeId === task.id ? (
@@ -75,7 +87,18 @@ const TaskItem = ({
             <PencilSimpleIcon size={18} />
           </button>
 
-          <input type="checkbox" className="size-4" />
+          <input
+            type="checkbox"
+            className="size-4 cursor-pointer"
+            checked={task.completed ?? false}
+            onChange={() =>
+              handleEdit({
+                id: task.id,
+                title: task.title,
+                completed: !task.completed,
+              })
+            }
+          />
         </>
       )}
     </div>
