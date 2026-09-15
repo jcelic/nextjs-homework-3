@@ -18,3 +18,9 @@ Jednostavna Next.js Todo aplikacija.
 - označavanje zadataka kao dovršenih
 - optimistic update za dodavanje zadataka
 - light/dark tema pomoću Zustanda
+
+## Profiler
+
+Pri usporedbi rezultata u React Profileru nije zabilježena značajna razlika prije i poslije ručne memoizacije. Profiler je pokazao da je `TaskItem` već automatski memoiziran pomoću React Compilera (`This component has been auto-memoized by the React Compiler`).
+
+Zbog toga je React već prije dodavanja React.memo izbjegavao nepotrebna renderiranja, pa ručna memoizacija nije donijela značajnu dodatnu promjenu.

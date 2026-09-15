@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import {
   CheckCircleIcon,
   PencilSimpleIcon,
@@ -110,4 +110,4 @@ const TaskItem = ({ task }: TaskItemProps) => {
   );
 };
 
-export default memo(TaskItem);
+export default TaskItem;
