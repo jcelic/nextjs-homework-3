@@ -19,6 +19,11 @@ export default function Home() {
   const { mutate: addTask } = useAddTask();
   const { mutate: editTask } = useEditTask();
 
+  const handleAdd = () => {
+    addTask({ title: inputValue, completed: false });
+    setInputValue('');
+  };
+
   const handleEdit = ({
     id,
     title,
@@ -53,7 +58,7 @@ export default function Home() {
 
           <button
             className="rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200"
-            onClick={() => addTask({ title: inputValue, completed: false })}
+            onClick={handleAdd}
           >
             Add
           </button>
