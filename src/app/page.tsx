@@ -1,9 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { useTasks } from './hooks/useTasks';
+import { useAddTask } from './hooks/useAddTask';
 
 export default function Home() {
+  const [inputValue, setInputValue] = useState('');
   const { data } = useTasks();
+  const { mutate: addTask } = useAddTask();
 
   return (
     <main className="min-h-screen bg-zinc-950 px-4 py-12 text-white">
@@ -15,9 +19,14 @@ export default function Home() {
             type="text"
             placeholder="Add a new task..."
             className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 outline-none placeholder:text-zinc-500 focus:border-zinc-500"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
           />
 
-          <button className="rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200">
+          <button
+            className="rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200"
+            onClick={() => addTask({ title: inputValue, completed: false })}
+          >
             Add
           </button>
         </div>
